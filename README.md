@@ -152,57 +152,58 @@ The platform evaluates GitHub portfolios using an **11-metric weighted scoring m
 
 # 🖼 Screenshots
 
-## Landing Page
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Landing Page</strong><br><br>
+      <img src="screenshots/landing-page.png" alt="Landing Page" width="100%">
+    </td>
+    <td align="center" width="50%">
+      <strong>Dashboard Overview</strong><br><br>
+      <img src="screenshots/dashboard-overview.png" alt="Dashboard Overview" width="100%">
+    </td>
+  </tr>
 
-![Landing Page](screenshots/landing-page.png)
+  <tr>
+    <td align="center">
+      <strong>Language Distribution</strong><br><br>
+      <img src="screenshots/language-distribution.png" alt="Language Distribution" width="100%">
+    </td>
+    <td align="center">
+      <strong>Repository Health Analysis</strong><br><br>
+      <img src="screenshots/repository-health.png" alt="Repository Health" width="100%">
+    </td>
+  </tr>
 
----
+  <tr>
+    <td align="center">
+      <strong>AI Portfolio Report</strong><br><br>
+      <img src="screenshots/ai-portfolio-report.png" alt="AI Portfolio Report" width="100%">
+    </td>
+    <td align="center">
+      <strong>Skill Gap Analysis</strong><br><br>
+      <img src="screenshots/skill-gap-analysis.png" alt="Skill Gap Analysis" width="100%">
+    </td>
+  </tr>
 
-## Dashboard Overview
+  <tr>
+    <td align="center">
+      <strong>Industry Readiness Analysis</strong><br><br>
+      <img src="screenshots/skill-gap-analysis-details.png" alt="Industry Readiness Analysis" width="100%">
+    </td>
+    <td align="center">
+      <strong>Career Guidance</strong><br><br>
+      <img src="screenshots/career-guidance.png" alt="Career Guidance" width="100%">
+    </td>
+  </tr>
 
-![Dashboard](screenshots/dashboard-overview.png)
-
----
-
-## Repository Health Analysis
-
-![Repository Health](screenshots/repository-health.png)
-
----
-
-## Language Distribution
-
-![Language Distribution](screenshots/language-distribution.png)
-
----
-
-## AI Portfolio Report
-
-![AI Portfolio Report](screenshots/ai-portfolio-report.png)
-
----
-
-## Skill Gap Analysis
-
-![Skill Gap Analysis](screenshots/skill-gap-analysis.png)
-
----
-
-## Industry Readiness Analysis
-
-![Industry Readiness](screenshots/skill-gap-analysis-details.png)
-
----
-
-## Career Guidance
-
-![Career Guidance](screenshots/career-guidance.png)
-
----
-
-## Final Portfolio Report
-
-![Final Report](screenshots/final-report.png)
+  <tr>
+    <td align="center" colspan="2">
+      <strong>Final Portfolio Report</strong><br><br>
+      <img src="screenshots/final-report.png" alt="Final Portfolio Report" width="85%">
+    </td>
+  </tr>
+</table>
 
 ---
 
