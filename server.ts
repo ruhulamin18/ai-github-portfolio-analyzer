@@ -300,6 +300,8 @@ app.get('/api/admin/analytics', (req, res) => {
   });
 });
 
+export default app;
+
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
@@ -320,4 +322,6 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
