@@ -175,6 +175,7 @@ export const CareerGuidanceView: React.FC<CareerGuidanceViewProps> = ({
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Portfolio Action Items */}
       <div className="bg-white border border-[#E8E3D8] rounded-3xl p-5 space-y-3 shadow-xs">
         <h3 className="text-sm font-extrabold text-[#1E1E1E] flex items-center gap-2">
@@ -193,6 +194,8 @@ export const CareerGuidanceView: React.FC<CareerGuidanceViewProps> = ({
         </div>
       </div>
 
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
     </div>
   );
 };

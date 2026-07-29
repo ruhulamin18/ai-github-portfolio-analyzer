@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Github, Search, Sparkles, ShieldCheck } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Sidebar, TabType } from './components/Sidebar';
 import { DashboardView } from './components/DashboardView';
+=======
+import { Navbar } from './components/Navbar';
+import { Sidebar, TabType } from './components/Sidebar';
+import { DashboardView } from './components/DashboardView';
+import { DashboardHero } from './components/dashboard/DashboardHero';
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 import { RepoAnalysisView } from './components/RepoAnalysisView';
 import { AIPortfolioView } from './components/AIPortfolioView';
 import { SkillGapView } from './components/SkillGapView';
@@ -10,9 +17,13 @@ import { ResumeMatchView } from './components/ResumeMatchView';
 import { RoadmapView } from './components/RoadmapView';
 import { CareerGuidanceView } from './components/CareerGuidanceView';
 import { ReportExportView } from './components/ReportExportView';
+<<<<<<< HEAD
 import { LandingView } from './components/LandingView';
 import { Footer } from './components/Footer';
 import { OAuthModal } from './components/OAuthModal';
+=======
+import { Footer } from './components/Footer';
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { DashboardSkeleton } from './components/common/SkeletonLoader';
 import { RetryComponent } from './components/common/RetryComponent';
@@ -25,9 +36,13 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [username, setUsername] = useState<string>('');
   const [customToken, setCustomToken] = useState<string>('');
+<<<<<<< HEAD
   const [searchInput, setSearchInput] = useState<string>('');
 
   const [isOAuthOpen, setIsOAuthOpen] = useState<boolean>(false);
+=======
+
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   // Custom Hooks
@@ -41,7 +56,10 @@ export default function App() {
     loading: loadingProfile,
     error: profileError,
     refetch: refetchProfile,
+<<<<<<< HEAD
     setProfile,
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   } = useGithubProfile(username, customToken);
 
   const {
@@ -90,6 +108,7 @@ export default function App() {
     }
   };
 
+<<<<<<< HEAD
   const normalizeGitHubUsername = (value: string) => {
     const trimmed = value.trim();
     try {
@@ -140,18 +159,59 @@ export default function App() {
               isOpen={isSidebarOpen}
             />
           )}
+=======
+  return (
+    <ErrorBoundary>
+      <div className="min-h-screen bg-[#F5F1E8] text-[#1E1E1E] flex flex-col font-sans selection:bg-[#F2C879] selection:text-[#1A1A1A]">
+        {/* Top Navbar */}
+        <Navbar
+          currentProfile={profile}
+          activeTab={activeTab}
+          onTabChange={(tab) => setActiveTab(tab)}
+          onSearchUsername={(usr) => setUsername(usr)}
+          customToken={customToken}
+          onUpdateToken={(token) => setCustomToken(token)}
+          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
+
+        {/* Main Body */}
+        <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col md:flex-row">
+          {/* Sidebar Navigation */}
+          <Sidebar
+            activeTab={activeTab}
+            onTabChange={(tab) => setActiveTab(tab)}
+            overallScore={portfolioScore?.totalScore ?? 0}
+            letterGrade={portfolioScore?.letterGrade ?? '—'}
+            isOpen={isSidebarOpen}
+          />
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
           {/* Content View Container */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto min-w-0">
             {loadingProfile ? (
               <DashboardSkeleton />
             ) : profileError ? (
+<<<<<<< HEAD
               <RetryComponent message={profileError} onRetry={refetchProfile} />
             ) : !username || !profile || !portfolioScore ? (
               <LandingView
                 onSearch={(usr) => setUsername(usr)}
                 customToken={customToken}
                 onUpdateToken={(token) => setCustomToken(token)}
+=======
+              <RetryComponent
+                message={profileError}
+                onRetry={refetchProfile}
+                onSaveToken={(token) => setCustomToken(token)}
+              />
+            ) : !profile || !portfolioScore ? (
+              <DashboardHero
+                profile={null}
+                portfolioScore={null}
+                repos={[]}
+                latestActivity={null}
+                onNavigateTab={(tab) => setActiveTab(tab as TabType)}
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
               />
             ) : (
               <ErrorBoundary>
@@ -221,6 +281,7 @@ export default function App() {
         {/* Premium Footer */}
         <Footer />
 
+<<<<<<< HEAD
         {/* OAuth Login Modal */}
         <OAuthModal
           isOpen={isOAuthOpen}
@@ -230,8 +291,13 @@ export default function App() {
             setIsOAuthOpen(false);
           }}
         />
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
       </div>
     </ErrorBoundary>
   );
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed

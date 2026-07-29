@@ -9,6 +9,7 @@ import {
 
 const GITHUB_API_BASE = 'https://api.github.com';
 
+<<<<<<< HEAD
 function getAuthHeaders(token?: string): Record<string, string> {
   const headers: Record<string, string> = {
     Accept: 'application/vnd.github.v3+json',
@@ -34,6 +35,51 @@ export async function fetchGitHubProfile(username: string, token?: string): Prom
 
   try {
     const res = await axios.get(`${GITHUB_API_BASE}/users/${cleanUser}`, { headers, timeout: 8000 });
+=======
+function createGitHubHeaders(token?: string): Record<string, string> {
+  const authToken = token || process.env.GITHUB_TOKEN;
+  return {
+    Accept: 'application/vnd.github+json',
+    'User-Agent': 'AI-GitHub-Portfolio-Analyzer',
+    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+  };
+}
+
+function isDeploymentUrl(value?: string): boolean {
+  if (!value) return false;
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return hostname !== 'github.com' && hostname !== 'www.github.com';
+  } catch {
+    return false;
+  }
+}
+
+export class GitHubApiError extends Error {
+  constructor(message: string, public status = 502) {
+    super(message);
+    this.name = 'GitHubApiError';
+  }
+}
+
+function toGitHubApiError(error: unknown): GitHubApiError {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    if (status === 404) return new GitHubApiError('GitHub user was not found.', 404);
+    if (status === 403 || status === 429) {
+      return new GitHubApiError('GitHub API rate limit reached. Add GITHUB_TOKEN to .env and restart the server.', 429);
+    }
+    if (error.code === 'ECONNABORTED') return new GitHubApiError('GitHub API request timed out. Please try again.', 504);
+  }
+  return new GitHubApiError('Could not connect to the GitHub API. Check your internet connection and try again.');
+}
+
+export async function fetchGitHubProfile(username: string, token?: string): Promise<GitHubProfile> {
+  const headers = createGitHubHeaders(token);
+
+  try {
+    const res = await axios.get(`${GITHUB_API_BASE}/users/${username}`, { headers, timeout: 8000 });
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
     const data = res.data;
 
     return {
@@ -49,11 +95,16 @@ export async function fetchGitHubProfile(username: string, token?: string): Prom
       followers: data.followers || 0,
       following: data.following || 0,
       publicReposCount: data.public_repos || 0,
+<<<<<<< HEAD
+=======
+      // These totals are calculated from the real repository response in server.ts.
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
       starsCount: 0,
       forksCount: 0,
       contributionsLastYear: 0,
       createdAt: data.created_at || new Date().toISOString(),
     };
+<<<<<<< HEAD
   } catch (error: any) {
     if (error.response) {
       if (error.response.status === 404) {
@@ -65,21 +116,33 @@ export async function fetchGitHubProfile(username: string, token?: string): Prom
       }
     }
     throw new Error(error.message || `Failed to fetch GitHub profile for "${cleanUser}".`);
+=======
+  } catch (error) {
+    throw toGitHubApiError(error);
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   }
 }
 
 export async function fetchUserRepos(username: string, token?: string): Promise<Repository[]> {
+<<<<<<< HEAD
   const cleanUser = username.trim().replace(/^@/, '').replace(/^github\.com\//i, '').split('/')[0];
   const headers = getAuthHeaders(token);
 
   try {
     const res = await axios.get(`${GITHUB_API_BASE}/users/${cleanUser}/repos?sort=updated&per_page=30`, {
+=======
+  const headers = createGitHubHeaders(token);
+
+  try {
+    const res = await axios.get(`${GITHUB_API_BASE}/users/${username}/repos?sort=updated&per_page=30`, {
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
       headers,
       timeout: 8000,
     });
     
     const reposData = res.data;
 
+<<<<<<< HEAD
     if (!Array.isArray(reposData) || reposData.length === 0) {
       return [];
     }
@@ -134,17 +197,39 @@ export async function fetchUserRepos(username: string, token?: string): Promise<
       if (hasWorkflows) realHealth += 5;
 
       const completenessScore = Math.min(100, realHealth);
+=======
+    if (!Array.isArray(reposData)) return [];
+
+    return reposData.map((repo: any) => {
+      const hasLicense = Boolean(repo.license);
+      const hasDescription = Boolean(repo.description && repo.description.length > 10);
+      const openIssues = repo.open_issues_count || 0;
+      const stars = repo.stargazers_count || 0;
+      const forks = repo.forks_count || 0;
+
+      // Calculate completeness heuristic
+      let completeness = 50;
+      if (hasDescription) completeness += 15;
+      if (hasLicense) completeness += 10;
+      if (repo.homepage) completeness += 15;
+      if (repo.topics && repo.topics.length > 0) completeness += 10;
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
       return {
         id: repo.id,
         name: repo.name,
         fullName: repo.full_name,
+<<<<<<< HEAD
         description: descriptionText || 'No description provided.',
+=======
+        description: repo.description || 'No description provided.',
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
         htmlUrl: repo.html_url,
         stars: stars,
         forks: forks,
         watchers: repo.watchers_count || stars,
         language: repo.language || 'TypeScript',
+<<<<<<< HEAD
         topics: topics.length > 0 ? topics : ['github', 'repository'],
         updatedAt: repo.pushed_at || repo.updated_at || new Date().toISOString(),
         defaultBranch: repo.default_branch || 'main',
@@ -168,6 +253,97 @@ export async function fetchUserRepos(username: string, token?: string): Promise<
       throw new Error(`GitHub API rate limit exceeded while fetching repositories.`);
     }
     return [];
+=======
+        topics: repo.topics || ['github', 'portfolio'],
+        updatedAt: repo.pushed_at || repo.updated_at || new Date().toISOString(),
+        defaultBranch: repo.default_branch || 'main',
+        hasReadme: false,
+        readmeScore: 0,
+        repoScore: 0,
+        hasLicense: hasLicense,
+        hasWorkflows: false,
+        hasSecurityFile: false,
+        hasGitignore: false,
+        hasContributing: false,
+        deploymentUrl: isDeploymentUrl(repo.homepage) ? repo.homepage : undefined,
+        hasPages: Boolean(repo.has_pages),
+        openIssuesCount: openIssues,
+        completenessScore: Math.min(100, completeness),
+      };
+    });
+  } catch (error) {
+    throw toGitHubApiError(error);
+  }
+}
+
+/** Enrich public repository metadata with file evidence from GitHub's git-tree API. */
+export async function analyzeRepositoryEvidence(repos: Repository[], token?: string): Promise<Repository[]> {
+  const headers = createGitHubHeaders(token);
+  const batchSize = 5;
+  const analyzed: Repository[] = [];
+
+  for (let index = 0; index < repos.length; index += batchSize) {
+    const batch = repos.slice(index, index + batchSize);
+    const results = await Promise.all(batch.map(async (repo) => {
+      try {
+        const branch = encodeURIComponent(repo.defaultBranch);
+        const response = await axios.get(`${GITHUB_API_BASE}/repos/${repo.fullName}/git/trees/${branch}?recursive=1`, {
+          headers,
+          timeout: 10000,
+        });
+        const paths = new Set<string>((response.data.tree || [])
+          .filter((item: any) => item.type === 'blob')
+          .map((item: any) => String(item.path).toLowerCase()));
+        const hasReadme = [...paths].some((path) => /^readme(?:\.[a-z0-9]+)?$/i.test(path));
+        const hasSecurityFile = [...paths].some((path) => /(^|\/)security(?:\.[a-z0-9]+)?$/i.test(path));
+        const hasWorkflows = [...paths].some((path) => path.startsWith('.github/workflows/'));
+        const hasGitignore = paths.has('.gitignore');
+        const hasContributing = [...paths].some((path) => /(^|\/)contributing(?:\.[a-z0-9]+)?$/i.test(path));
+        const hasSourceDirectory = [...paths].some((path) => /^(src|app|lib|packages|tests?|__tests__)\//.test(path));
+        const organizationScore = Math.round((Number(hasSourceDirectory) + Number(hasGitignore) + Number(hasContributing)) / 3 * 100);
+        const readmeScore = hasReadme ? 100 : 0;
+        const evidenceScore = [hasReadme, Boolean(repo.description && repo.description !== 'No description provided.'), repo.hasLicense, hasWorkflows, hasSecurityFile, hasGitignore, Boolean(repo.deploymentUrl || repo.hasPages), hasSourceDirectory]
+          .filter(Boolean).length;
+
+        return {
+          ...repo,
+          hasReadme,
+          readmeScore,
+          hasSecurityFile,
+          hasWorkflows,
+          hasGitignore,
+          hasContributing,
+          organizationScore,
+          repoScore: Math.round((evidenceScore / 8) * 100),
+        };
+      } catch (error) {
+        throw toGitHubApiError(error);
+      }
+    }));
+    analyzed.push(...results);
+  }
+  return analyzed;
+}
+
+export async function fetchLatestActivity(repos: Repository[], token?: string): Promise<LatestActivity | null> {
+  const latestRepo = [...repos].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0];
+  if (!latestRepo) return null;
+
+  try {
+    const response = await axios.get(`${GITHUB_API_BASE}/repos/${latestRepo.fullName}/commits?per_page=1`, {
+      headers: createGitHubHeaders(token),
+      timeout: 10000,
+    });
+    const commit = response.data?.[0];
+    if (!commit?.commit?.message || !commit?.commit?.author?.date) return null;
+    return {
+      repoName: latestRepo.name,
+      commitMessage: String(commit.commit.message).split('\n')[0],
+      updatedAt: commit.commit.author.date,
+    };
+  } catch (error) {
+    throw toGitHubApiError(error);
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   }
 }
 
@@ -235,6 +411,7 @@ export async function fetchUserEvents(username: string, token?: string): Promise
   }
 }
 
+<<<<<<< HEAD
 export function extractLatestActivity(events: any[] = [], repos: Repository[] = []): LatestActivity | null {
   if (Array.isArray(events) && events.length > 0) {
     for (const evt of events) {
@@ -313,6 +490,8 @@ export function extractLatestActivity(events: any[] = [], repos: Repository[] = 
   return null;
 }
 
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 export async function fetchRealContributionData(username: string): Promise<ContributionDay[]> {
   if (!username) return [];
 

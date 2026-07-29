@@ -1,7 +1,10 @@
 import { Repository } from '../types';
 
+<<<<<<< HEAD
 export * from './githubScoreCalculator';
 
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 export interface RepositoryHealthPillars {
   readmeQualityScore: number;
   docScore: number;
@@ -33,7 +36,11 @@ export function calculateRepositoryHealth(repos: Repository[]): RepositoryHealth
   const docScore = Math.min(
     100,
     Math.round(
+<<<<<<< HEAD
       (repos.filter((r) => Boolean(r.description && r.description.length > 5 && r.description !== 'No description provided.')).length /
+=======
+      (repos.filter((r) => Boolean(r.description && r.description.length > 5)).length /
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
         totalRepoCount) *
         100
     )
@@ -45,19 +52,35 @@ export function calculateRepositoryHealth(repos: Repository[]): RepositoryHealth
   const licensedCount = repos.filter((r) => Boolean(r.hasLicense)).length;
   const licenseScore = Math.min(100, Math.round((licensedCount / totalRepoCount) * 100));
 
+<<<<<<< HEAD
   const securityCount = repos.filter((r) => Boolean(r.hasSecurityFile || r.hasLicense)).length;
   const securityScore = Math.min(100, Math.round((securityCount / totalRepoCount) * 100));
+=======
+  const securityCount = repos.filter((r) => Boolean(r.hasSecurityFile)).length;
+  const securityScore = Math.min(
+    100,
+    Math.max(
+      70,
+      Math.round(((securityCount + licensedCount) / (totalRepoCount * 2)) * 100 + 30)
+    )
+  );
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
   const workflowCount = repos.filter((r) => Boolean(r.hasWorkflows)).length;
   const cicdScore = Math.min(100, Math.round((workflowCount / totalRepoCount) * 100));
 
   const overallHealthScore = Math.round(
+<<<<<<< HEAD
     readmeQualityScore * 0.25 +
       docScore * 0.20 +
       deploymentScore * 0.15 +
       licenseScore * 0.15 +
       securityScore * 0.15 +
       cicdScore * 0.10
+=======
+    (readmeQualityScore + docScore + deploymentScore + licenseScore + securityScore + cicdScore) /
+      6
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   );
 
   const healthPillars = [

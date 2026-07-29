@@ -34,8 +34,13 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   onTabChange,
+<<<<<<< HEAD
   overallScore = 92,
   letterGrade = 'A',
+=======
+  overallScore = 0,
+  letterGrade = '—',
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   isOpen = true,
   onClose,
 }) => {

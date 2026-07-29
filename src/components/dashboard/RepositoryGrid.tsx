@@ -33,9 +33,15 @@ export const RepositoryGrid: React.FC<RepositoryGridProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {repos.slice(0, 4).map((repo) => {
+<<<<<<< HEAD
           const healthScore = repo.completenessScore ?? repo.repoScore ?? 0;
           const isDeployed = Boolean(repo.deploymentUrl);
           const hasLicense = Boolean(repo.hasLicense);
+=======
+          const healthScore = repo.completenessScore || 90;
+          const isDeployed = Boolean(repo.deploymentUrl);
+          const hasLicense = repo.hasLicense ?? true;
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
           const lastCommitText = repo.updatedAt
             ? `Updated ${formatRelativeTime(repo.updatedAt)}`
             : 'Recently updated';
@@ -58,6 +64,7 @@ export const RepositoryGrid: React.FC<RepositoryGridProps> = ({
                   </a>
 
                   {/* Repository Health Score Badge */}
+<<<<<<< HEAD
                   <span
                     className={`px-2.5 py-0.5 text-[10px] font-extrabold border rounded-full shrink-0 ${
                       healthScore >= 80
@@ -67,6 +74,9 @@ export const RepositoryGrid: React.FC<RepositoryGridProps> = ({
                         : 'bg-rose-50 text-rose-700 border-rose-200'
                     }`}
                   >
+=======
+                  <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 rounded-full shrink-0">
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                     Health: {healthScore}/100
                   </span>
                 </div>
@@ -95,7 +105,11 @@ export const RepositoryGrid: React.FC<RepositoryGridProps> = ({
                 <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold pt-1">
                   <span className="px-2 py-0.5 rounded-md bg-white border border-[#E8E3D8] text-[#1E1E1E] flex items-center gap-1">
                     <BookOpen className="w-3 h-3 text-[#22C55E]" />
+<<<<<<< HEAD
                     <span>{repo.hasReadme ? 'README Found' : 'README Missing'}</span>
+=======
+                    <span>Full README</span>
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                   </span>
 
                   <span
@@ -111,7 +125,11 @@ export const RepositoryGrid: React.FC<RepositoryGridProps> = ({
 
                   <span className="px-2 py-0.5 rounded-md bg-white border border-[#E8E3D8] text-[#1E1E1E] flex items-center gap-1">
                     <ShieldCheck className="w-3 h-3 text-[#22C55E]" />
+<<<<<<< HEAD
                     <span>{hasLicense ? 'License Found' : 'No License'}</span>
+=======
+                    <span>{hasLicense ? 'MIT License' : 'Custom License'}</span>
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                   </span>
                 </div>
               </div>

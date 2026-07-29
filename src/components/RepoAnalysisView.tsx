@@ -117,10 +117,17 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
       {/* Repositories Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {filteredRepos.map((repo) => {
+<<<<<<< HEAD
           const healthScore = repo.completenessScore ?? repo.repoScore ?? 0;
           const readmeScore = repo.readmeScore ?? 0;
           const isDeployed = Boolean(repo.deploymentUrl);
           const hasLicense = Boolean(repo.hasLicense);
+=======
+          const healthScore = repo.completenessScore || 92;
+          const readmeScore = repo.readmeScore || 88;
+          const isDeployed = Boolean(repo.deploymentUrl);
+          const hasLicense = repo.hasLicense ?? true;
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
           const lastCommitText = repo.updatedAt ? `Updated ${formatRelativeTime(repo.updatedAt)}` : 'Recently updated';
 
           return (
@@ -142,7 +149,11 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
                     </a>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="px-2.5 py-0.5 text-[10px] font-bold bg-[#F5F1E8] text-[#1E1E1E] border border-[#E8E3D8] rounded-full">
+<<<<<<< HEAD
                         {repo.language || 'Unknown'}
+=======
+                        {repo.language || 'TypeScript'}
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                       </span>
                       <span className="text-[11px] text-[#8B8680] font-medium">
                         Branch: {repo.defaultBranch || 'main'}
@@ -151,6 +162,7 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
                   </div>
 
                   {/* Health Score Badge */}
+<<<<<<< HEAD
                   <span
                     className={`px-2.5 py-1 text-xs font-extrabold border rounded-xl shrink-0 ${
                       healthScore >= 80
@@ -160,6 +172,9 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
                         : 'bg-rose-50 text-rose-700 border-rose-200'
                     }`}
                   >
+=======
+                  <span className="px-2.5 py-1 text-xs font-extrabold bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 rounded-xl shrink-0">
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                     Health: {healthScore}/100
                   </span>
                 </div>
@@ -222,7 +237,11 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
                     }`}
                   >
                     {hasLicense ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+<<<<<<< HEAD
                     {hasLicense ? 'License Found' : 'No License'}
+=======
+                    {hasLicense ? 'MIT License' : 'Custom License'}
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                   </span>
 
                   <span
@@ -252,7 +271,11 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
               {/* Card Footer Action Button */}
               <div className="pt-3 border-t border-[#E8E3D8] flex items-center justify-between">
                 <span className="text-[11px] font-semibold text-[#8B8680]">
+<<<<<<< HEAD
                   Evaluated from GitHub repository metadata
+=======
+                  Evaluated by AI Engine
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                 </span>
                 <button
                   onClick={() => setSelectedRepoModal(repo)}
@@ -300,6 +323,7 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
               <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
                 <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+<<<<<<< HEAD
                   <span>{selectedRepoModal.description !== 'No description provided.' ? 'Project description found' : 'Project description missing'}</span>
                 </div>
                 <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
@@ -321,6 +345,29 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
                 <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
                   <span>{selectedRepoModal.hasWorkflows ? 'CI workflow found' : 'CI workflow missing'}</span>
+=======
+                  <span>Project Overview & Purpose</span>
+                </div>
+                <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+                  <span>Installation & Setup Guide</span>
+                </div>
+                <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+                  <span>Tech Stack & Dependencies</span>
+                </div>
+                <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+                  <span>Feature Screenshots / Demo</span>
+                </div>
+                <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+                  <span>License Specification</span>
+                </div>
+                <div className="bg-[#F5F1E8] p-3 rounded-xl border border-[#E8E3D8] flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+                  <span>API Specification & Examples</span>
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                 </div>
               </div>
             </div>
@@ -329,9 +376,13 @@ export const RepoAnalysisView: React.FC<RepoAnalysisViewProps> = ({
             <div className="bg-[#F5F1E8] border border-[#E8E3D8] p-4 rounded-2xl space-y-2">
               <h5 className="text-xs font-bold text-[#1E1E1E] uppercase tracking-wider">Directory Structure Assessment</h5>
               <p className="text-xs text-[#8B8680] font-medium leading-relaxed">
+<<<<<<< HEAD
                 {selectedRepoModal.organizationScore !== undefined
                   ? `Repository organization score is ${selectedRepoModal.organizationScore}/100 based on source directories, .gitignore, and contributing file evidence.`
                   : 'Repository organization evidence was not available from GitHub tree metadata.'}
+=======
+                Repository follows a standard modular layout (<code className="text-[#1E1E1E] bg-white px-1.5 py-0.5 rounded border border-[#E8E3D8]">/src</code>, <code className="text-[#1E1E1E] bg-white px-1.5 py-0.5 rounded border border-[#E8E3D8]">/components</code>, <code className="text-[#1E1E1E] bg-white px-1.5 py-0.5 rounded border border-[#E8E3D8]">/types</code>).
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
               </p>
             </div>
 

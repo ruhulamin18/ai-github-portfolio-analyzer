@@ -1,18 +1,30 @@
 import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
+<<<<<<< HEAD
 import jwt from 'jsonwebtoken';
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 import { createServer as createViteServer } from 'vite';
 import {
   fetchGitHubProfile,
   fetchUserRepos,
+<<<<<<< HEAD
+=======
+  analyzeRepositoryEvidence,
+  fetchLatestActivity,
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   fetchUserEvents,
   fetchRealContributionData,
   calculateLanguageStats,
   generateContributionHeatmap,
+<<<<<<< HEAD
   extractLatestActivity,
   getMockProfile,
   getMockRepos,
+=======
+  GitHubApiError,
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 } from './src/server/github.js';
 import {
   generateAIPortfolioAnalysis,
@@ -27,7 +39,10 @@ dotenv.config();
 
 const app = express();
 const PORT = 3000;
+<<<<<<< HEAD
 const JWT_SECRET = process.env.JWT_SECRET || 'ai_github_portfolio_analyzer_jwt_secret_2026';
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
 app.use(express.json({ limit: '10mb' }));
 
@@ -53,6 +68,7 @@ const feedbackStore: UserFeedback[] = [
 let apiCallsCountToday = 142;
 let totalProfilesAnalyzed = 58;
 
+<<<<<<< HEAD
 // --- AUTH ROUTES ---
 app.get('/api/auth/github/url', (req, res) => {
   const clientId = process.env.GITHUB_CLIENT_ID;
@@ -131,10 +147,13 @@ app.get('/api/auth/me', (req, res) => {
   }
 });
 
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 // --- GITHUB DATA ENDPOINTS ---
 app.get('/api/github/profile/:username', async (req, res) => {
   apiCallsCountToday++;
   totalProfilesAnalyzed++;
+<<<<<<< HEAD
   const rawUsername = req.params.username || '';
   const username = rawUsername.trim().replace(/^@/, '').replace(/^github\.com\//i, '').split('/')[0];
   const token = req.headers['x-github-token'] as string;
@@ -165,23 +184,43 @@ app.get('/api/github/profile/:username', async (req, res) => {
 
   try {
     const [profile, repos, events, realContribs] = await Promise.all([
+=======
+  const username = req.params.username;
+  const token = req.headers['x-github-token'] as string;
+
+  try {
+    const [profile, fetchedRepos, events, realContribs] = await Promise.all([
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
       fetchGitHubProfile(username, token),
       fetchUserRepos(username, token),
       fetchUserEvents(username, token),
       fetchRealContributionData(username),
     ]);
+<<<<<<< HEAD
+=======
+    const repos = await analyzeRepositoryEvidence(fetchedRepos, token);
+    const latestActivity = await fetchLatestActivity(repos, token);
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
     
     // Calculate actual total stars and forks from fetched public repos
     const realTotalStars = repos.reduce((sum, r) => sum + (r.stars || 0), 0);
     const realTotalForks = repos.reduce((sum, r) => sum + (r.forks || 0), 0);
+<<<<<<< HEAD
     profile.starsCount = realTotalStars;
     profile.forksCount = realTotalForks;
+=======
+    profile.starsCount = realTotalStars > 0 ? realTotalStars : profile.starsCount;
+    profile.forksCount = realTotalForks > 0 ? realTotalForks : profile.forksCount;
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
     const languages = calculateLanguageStats(repos);
     const heatmap = generateContributionHeatmap(username, repos, events, realContribs);
     profile.contributionsLastYear = heatmap.reduce((acc, d) => acc + d.count, 0);
     const portfolioScore = calculatePortfolioScore(profile, repos);
+<<<<<<< HEAD
     const latestActivity = extractLatestActivity(events, repos);
+=======
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
     res.json({
       profile,
@@ -191,6 +230,7 @@ app.get('/api/github/profile/:username', async (req, res) => {
       portfolioScore,
       latestActivity,
     });
+<<<<<<< HEAD
   } catch (err: any) {
     const message = err.message || 'Failed to fetch GitHub data';
     const isNotFound = message.includes('not found');
@@ -198,6 +238,13 @@ app.get('/api/github/profile/:username', async (req, res) => {
     const status = isNotFound ? 404 : isRateLimit ? 403 : 400;
 
     res.status(status).json({ error: message });
+=======
+  } catch (error) {
+    const apiError = error instanceof GitHubApiError
+      ? error
+      : new GitHubApiError('Unable to load data from GitHub. Please try again.');
+    res.status(apiError.status).json({ error: apiError.message });
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   }
 });
 
@@ -216,11 +263,22 @@ app.post('/api/analyze/portfolio', async (req, res) => {
 app.post('/api/analyze/skill-gap', async (req, res) => {
   apiCallsCountToday++;
   const { profile, repos, targetRole } = req.body;
+<<<<<<< HEAD
   const role = targetRole || 'Full Stack Developer';
 
   const skillGap = await generateSkillGapAnalysis(
     profile || getMockProfile('ruhulamin18'),
     repos || getMockRepos('ruhulamin18'),
+=======
+  if (!profile || !repos) {
+    return res.status(400).json({ error: 'Profile and repositories are required.' });
+  }
+  const role = targetRole || 'Full Stack Developer';
+
+  const skillGap = await generateSkillGapAnalysis(
+    profile,
+    repos,
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
     role
   );
   res.json(skillGap);
@@ -233,16 +291,30 @@ app.post('/api/analyze/resume-match', async (req, res) => {
     return res.status(400).json({ error: 'Resume text is required' });
   }
 
+<<<<<<< HEAD
   const result = await generateResumeMatch(resumeText, repos || getMockRepos('ruhulamin18'));
+=======
+  if (!repos) return res.status(400).json({ error: 'Repositories are required.' });
+  const result = await generateResumeMatch(resumeText, repos);
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   res.json(result);
 });
 
 app.post('/api/career', async (req, res) => {
   apiCallsCountToday++;
   const { profile, repos } = req.body;
+<<<<<<< HEAD
   const career = await generateCareerRecommendations(
     profile || getMockProfile('ruhulamin18'),
     repos || getMockRepos('ruhulamin18')
+=======
+  if (!profile || !repos) {
+    return res.status(400).json({ error: 'Profile and repositories are required.' });
+  }
+  const career = await generateCareerRecommendations(
+    profile,
+    repos
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   );
   res.json(career);
 });

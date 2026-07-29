@@ -101,8 +101,12 @@ export interface PortfolioScoreFactor {
 
 export interface OverallPortfolioScore {
   totalScore: number; // 0 - 100
+<<<<<<< HEAD
   letterGrade: 'A+' | 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' | 'F' | string;
   performanceLevel?: 'Outstanding' | 'Excellent' | 'Very Good' | 'Good' | 'Fair' | 'Needs Improvement' | string;
+=======
+  letterGrade: 'A+' | 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' | 'F';
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   factors: PortfolioScoreFactor[];
   summary: string;
 }
@@ -119,13 +123,18 @@ export interface AIPortfolioReport {
 }
 
 export interface SkillGapAnalysis {
+<<<<<<< HEAD
   targetRole: 'Frontend Developer' | 'Backend Developer' | 'Full Stack Developer' | 'ML Engineer' | 'Data Scientist' | 'DevOps Engineer' | string;
+=======
+  targetRole: 'Frontend Developer' | 'Backend Developer' | 'Full Stack Developer' | 'ML Engineer' | 'Data Scientist' | 'DevOps Engineer';
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   matchPercentage: number;
   userSkills: string[];
   missingSkills: string[];
   recommendedTechnologies: string[];
   learningPriorities: {
     skill: string;
+<<<<<<< HEAD
     priority: 'High' | 'Medium' | 'Low' | string;
     estimatedHours: number;
     description: string;
@@ -143,6 +152,12 @@ export interface SkillGapAnalysis {
     bar?: { skill: string; status: number }[];
     pie?: { name: string; value: number }[];
   };
+=======
+    priority: 'High' | 'Medium' | 'Low';
+    estimatedHours: number;
+    description: string;
+  }[];
+>>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 }
 
 export interface ResumeMatchResult {
