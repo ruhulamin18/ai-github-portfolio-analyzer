@@ -1,0 +1,6 @@
+{
+  "name": "AI GitHub Portfolio Analyzer",
+  "description": "Enterprise-grade AI tool evaluating GitHub profiles, repos, code quality, READMEs, career readiness, skill gaps, and resume matching.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
