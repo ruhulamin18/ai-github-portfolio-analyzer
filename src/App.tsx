@@ -112,6 +112,11 @@ export default function App() {
     }
   };
 
+  const handleGoHome = () => {
+    setUsername('');
+    setProfile(null);
+  };
+
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-[#F5F1E8] text-[#1E1E1E] flex flex-col font-sans selection:bg-[#F2C879] selection:text-[#1A1A1A]">
@@ -136,7 +141,7 @@ export default function App() {
               activeTab={activeTab}
               onTabChange={(tab) => setActiveTab(tab)}
               overallScore={portfolioScore?.totalScore || 0}
-              letterGrade={portfolioScore?.letterGrade || 'â€”'}
+              letterGrade={portfolioScore?.letterGrade || '—'}
               isOpen={isSidebarOpen}
             />
           )}
@@ -146,7 +151,15 @@ export default function App() {
             {loadingProfile ? (
               <DashboardSkeleton />
             ) : profileError ? (
-              <RetryComponent message={profileError} onRetry={refetchProfile} />
+              <RetryComponent
+                message={profileError}
+                onRetry={refetchProfile}
+                onGoHome={handleGoHome}
+                customToken={customToken}
+                onUpdateToken={(token) => {
+                  setCustomToken(token);
+                }}
+              />
             ) : !username || !profile || !portfolioScore ? (
               <LandingView
                 onSearch={(usr) => setUsername(usr)}
