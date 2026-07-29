@@ -8,6 +8,7 @@ import {
   LatestActivity,
 } from '../types';
 import { calculateOverallGitHubScore, extractGitHubMetrics } from '../utils/githubScoreCalculator';
+import { getLanguageColor } from '../utils/languageParser';
 
 export interface GitHubDataResponse {
   profile: GitHubProfile;
@@ -145,11 +146,11 @@ export async function fetchGitHubUserDataDirect(
   });
   const totalLangs = Object.values(langCounts).reduce((a, b) => a + b, 0) || 1;
   const languages: LanguageStat[] = Object.entries(langCounts)
-    .map(([name, count]) => ({
+    .map(([name, count], index) => ({
       name,
       bytes: count * 125000,
       percentage: Math.round((count / totalLangs) * 100),
-      color: '#3B82F6',
+      color: getLanguageColor(name, undefined, index),
       repoCount: count,
     }))
     .sort((a, b) => b.percentage - a.percentage);

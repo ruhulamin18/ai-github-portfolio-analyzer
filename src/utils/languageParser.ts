@@ -1,19 +1,53 @@
 import { LanguageStat, Repository } from '../types';
 
 export const LANG_COLOR_PALETTE: Record<string, string> = {
-  JavaScript: '#F59E0B',
-  Python: '#3B82F6',
-  Java: '#10B981',
-  HTML: '#EF4444',
-  CSS: '#8B5CF6',
-  TypeScript: '#3178C6',
-  'C++': '#EC4899',
-  Go: '#06B6D4',
-  Ruby: '#E11D48',
-  PHP: '#6366F1',
-  Shell: '#84CC16',
-  Others: '#94A3B8',
+  JavaScript: '#F7DF1E',   // Bright Yellow
+  TypeScript: '#3178C6',   // Deep Blue
+  Python: '#3572A5',       // Steel Blue
+  Java: '#B07219',         // Golden Brown
+  HTML: '#E34C26',         // Red-Orange
+  CSS: '#563D7C',          // Deep Purple
+  'C++': '#F34B7D',        // Vivid Pink/Red
+  C: '#555555',            // Slate Gray
+  'C#': '#178600',         // Forest Green
+  Go: '#00ADD8',           // Bright Cyan
+  Ruby: '#E11D48',         // Crimson Red
+  PHP: '#6366F1',          // Indigo
+  Shell: '#84CC16',        // Lime Green
+  Rust: '#DEA584',         // Bronze
+  Swift: '#F05138',        // Bright Orange
+  Kotlin: '#A97BFF',       // Purple Violet
+  Dart: '#00B4AB',         // Teal
+  Vue: '#41B883',          // Emerald Green
+  Svelte: '#FF3E00',       // Coral Red
+  Jupyter: '#DA5B0B',      // Dark Orange
+  'Jupyter Notebook': '#DA5B0B',
+  R: '#198CE7',            // Sky Blue
+  Scala: '#DC322F',        // Bright Crimson
+  Elixir: '#6E4A7E',       // Dark Orchid
+  Haskell: '#5E5086',      // Slate Purple
+  Lua: '#000080',          // Navy Blue
+  Clojure: '#DB5855',      // Terracotta
+  Perl: '#0298C3',         // Aqua
+  Matlab: '#E16737',       // Rust Orange
+  Assembly: '#6E4C13',     // Coffee Brown
+  Others: '#94A3B8',       // Gray
 };
+
+const DYNAMIC_FALLBACK_COLORS = [
+  '#F59E0B', '#10B981', '#EC4899', '#8B5CF6', '#06B6D4',
+  '#E11D48', '#84CC16', '#F97316', '#3B82F6', '#6366F1', '#14B8A6'
+];
+
+export function getLanguageColor(name: string, customColor?: string, index: number = 0): string {
+  if (LANG_COLOR_PALETTE[name]) {
+    return LANG_COLOR_PALETTE[name];
+  }
+  if (customColor && customColor !== '#3B82F6' && customColor !== '#94a3b8' && customColor !== '#94A3B8') {
+    return customColor;
+  }
+  return DYNAMIC_FALLBACK_COLORS[index % DYNAMIC_FALLBACK_COLORS.length];
+}
 
 export interface ProcessedLanguage {
   name: string;
@@ -30,10 +64,10 @@ export function parseLanguageDistribution(
 
   if (languages && languages.length > 0) {
     rawLangList = languages
-      .map((l) => ({
+      .map((l, idx) => ({
         name: l.name,
         percentage: Number(l.percentage),
-        color: l.color || LANG_COLOR_PALETTE[l.name] || '#F59E0B',
+        color: getLanguageColor(l.name, l.color, idx),
       }))
       .filter((l) => l.percentage > 0)
       .sort((a, b) => b.percentage - a.percentage);
@@ -46,13 +80,27 @@ export function parseLanguageDistribution(
     });
     const total = Object.values(langCounts).reduce((a, b) => a + b, 0) || 1;
     rawLangList = Object.entries(langCounts)
-      .map(([name, count]) => ({
+      .map(([name, count], idx) => ({
         name,
         percentage: (count / total) * 100,
-        color: LANG_COLOR_PALETTE[name] || '#F59E0B',
+        color: getLanguageColor(name, undefined, idx),
       }))
       .sort((a, b) => b.percentage - a.percentage);
   }
+
+  // Ensure unique colors across all items in rawLangList
+  const usedColors = new Set<string>();
+  rawLangList = rawLangList.map((l) => {
+    let color = l.color;
+    if (usedColors.has(color.toLowerCase())) {
+      const available = DYNAMIC_FALLBACK_COLORS.find((c) => !usedColors.has(c.toLowerCase()));
+      if (available) {
+        color = available;
+      }
+    }
+    usedColors.add(color.toLowerCase());
+    return { ...l, color };
+  });
 
   if (rawLangList.length <= 5) {
     return rawLangList.map((l) => {
