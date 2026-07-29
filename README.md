@@ -20,6 +20,12 @@ The platform analyzes GitHub repositories, documentation quality, repository hea
 Whether you're preparing for internships, software engineering positions, or improving your open-source portfolio, this platform provides meaningful insights to help you grow.
 
 ---
+## 🚀 Live Demo
+
+Experience the application live:
+
+👉 **https://ai-github-portfolio-analyzer.vercel.app/**
+---
 
 # ✨ Key Features
 
