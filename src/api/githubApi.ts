@@ -203,25 +203,5 @@ export async function fetchGitHubUserData(
   targetUser: string,
   customToken?: string
 ): Promise<GitHubDataResponse> {
-  const headers: Record<string, string> = {};
-  if (customToken) {
-    headers['x-github-token'] = customToken;
-  }
-
-  try {
-    return await apiRequest<GitHubDataResponse>(`/api/github/profile/${targetUser}`, {
-      headers,
-    });
-  } catch (error: any) {
-    if (
-      error.status === 404 ||
-      error.status === 500 ||
-      error.message?.includes('404') ||
-      error.message?.includes('Failed to fetch') ||
-      error.message?.includes('HTTP error')
-    ) {
-      return await fetchGitHubUserDataDirect(targetUser, customToken);
-    }
-    throw error;
-  }
+  return await fetchGitHubUserDataDirect(targetUser, customToken);
 }
