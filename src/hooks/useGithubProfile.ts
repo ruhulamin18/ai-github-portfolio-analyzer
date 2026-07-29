@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { fetchGitHubUserData } from '../api/githubApi';
 import {
   GitHubProfile,
@@ -29,11 +29,7 @@ export function useGithubProfile(username: string, customToken: string = '') {
       setLanguages(data.languages);
       setHeatmap(data.heatmap);
       setPortfolioScore(data.portfolioScore);
-<<<<<<< HEAD
       setLatestActivity(data.latestActivity || null);
-=======
-      setLatestActivity(data.latestActivity);
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
       return data;
     } catch (err: any) {
       console.error('Error loading GitHub profile:', err);
@@ -69,9 +65,6 @@ export function useGithubProfile(username: string, customToken: string = '') {
     loading,
     error,
     refetch: loadProfile,
-<<<<<<< HEAD
     setProfile,
-=======
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
   };
 }

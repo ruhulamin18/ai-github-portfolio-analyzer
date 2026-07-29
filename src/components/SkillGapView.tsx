@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Target,
   CheckCircle2,
   XCircle,
   Clock,
-<<<<<<< HEAD
   BookOpen,
   Code2,
   BriefcaseBusiness,
@@ -29,15 +28,6 @@ import {
   YAxis,
 } from 'recharts';
 import { SkillGapAnalysis } from '../types';
-=======
-  Sparkles,
-  ArrowRight,
-  BookOpen,
-  Code2,
-  Award,
-} from 'lucide-react';
-import { SkillGapAnalysis, GitHubProfile, Repository } from '../types';
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
 interface SkillGapViewProps {
   skillGap: SkillGapAnalysis | null;
@@ -60,7 +50,6 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
     'ML Engineer',
     'Data Scientist',
   ];
-<<<<<<< HEAD
   const pieColors = ['#22C55E', '#F2C879'];
   const strongSkills = skillGap?.strongSkills || skillGap?.userSkills || [];
   const missingSkills = skillGap?.missingSkills || [];
@@ -81,8 +70,6 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
     { name: 'Matched Skills', value: strongSkills.length },
     { name: 'Missing Skills', value: missingSkills.length },
   ];
-=======
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
   return (
     <div className="space-y-6">
@@ -149,11 +136,7 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
                 <span className="text-[#22C55E] font-mono text-xl font-extrabold">{skillGap.matchPercentage}% Match</span>
               </h3>
               <p className="text-xs text-[#8B8680] font-medium">
-<<<<<<< HEAD
                 Industry readiness: <span className="font-bold text-[#1E1E1E]">{skillGap.industryReadiness || 'Needs Improvement'}</span>
-=======
-                Calculated by parsing repository language distributions, topic tags, and framework dependencies.
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
               </p>
             </div>
 
@@ -171,7 +154,6 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
             </div>
           </div>
 
-<<<<<<< HEAD
           {/* Dynamic Progress Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
@@ -246,8 +228,6 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
             </div>
           </div>
 
-=======
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
           {/* User Skills vs Missing Skills Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
@@ -255,17 +235,10 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
             <div className="bg-white border border-[#E8E3D8] rounded-3xl p-5 space-y-3 shadow-xs">
               <h3 className="text-sm font-extrabold text-[#22C55E] flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" />
-<<<<<<< HEAD
                 <span>Skills Verified in GitHub Portfolio ({strongSkills.length})</span>
               </h3>
               <div className="flex flex-wrap gap-2">
                 {strongSkills.map((skill) => (
-=======
-                <span>Skills Verified in GitHub Portfolio ({skillGap.userSkills.length})</span>
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {skillGap.userSkills.map((skill) => (
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                   <span
                     key={skill}
                     className="px-3 py-1 text-xs font-bold bg-[#22C55E]/10 text-[#15803D] border border-[#22C55E]/20 rounded-xl flex items-center gap-1.5"
@@ -281,17 +254,10 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
             <div className="bg-white border border-[#E8E3D8] rounded-3xl p-5 space-y-3 shadow-xs">
               <h3 className="text-sm font-extrabold text-[#D97706] flex items-center gap-2">
                 <XCircle className="w-4 h-4" />
-<<<<<<< HEAD
                 <span>Missing Industry Skills ({missingSkills.length})</span>
               </h3>
               <div className="flex flex-wrap gap-2">
                 {missingSkills.map((skill) => (
-=======
-                <span>Missing Industry Skills ({skillGap.missingSkills.length})</span>
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {skillGap.missingSkills.map((skill) => (
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                   <span
                     key={skill}
                     className="px-3 py-1 text-xs font-bold bg-[#F2C879]/30 text-[#B45309] border border-[#F2C879] rounded-xl flex items-center gap-1.5"
@@ -312,11 +278,7 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
               <span>Recommended Tech Stack Additions to Boost Match Score</span>
             </h3>
             <div className="flex flex-wrap gap-2">
-<<<<<<< HEAD
               {(skillGap.recommendedTechnologies || missingSkills).map((tech) => (
-=======
-              {skillGap.recommendedTechnologies.map((tech) => (
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                 <span
                   key={tech}
                   className="px-3 py-1 text-xs font-mono font-bold bg-[#F5F1E8] text-[#1E1E1E] border border-[#E8E3D8] rounded-xl"
@@ -327,7 +289,6 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
             </div>
           </div>
 
-<<<<<<< HEAD
           {/* Recommendations, Roadmap, Projects, Resume */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {[
@@ -359,8 +320,6 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
             })}
           </div>
 
-=======
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
           {/* Prioritized Learning Action Steps */}
           <div className="bg-white border border-[#E8E3D8] rounded-3xl p-5 space-y-4 shadow-xs">
             <h3 className="text-sm font-extrabold text-[#1E1E1E] flex items-center gap-2">
@@ -369,11 +328,7 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-<<<<<<< HEAD
               {learningPriorities.map((item, idx) => (
-=======
-              {skillGap.learningPriorities.map((item, idx) => (
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
                 <div
                   key={idx}
                   className="bg-[#F5F1E8] p-4 rounded-2xl border border-[#E8E3D8] space-y-2 flex flex-col justify-between"

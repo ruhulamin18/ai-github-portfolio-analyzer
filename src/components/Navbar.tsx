@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Github,
   Search,
@@ -76,7 +76,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           {/* Logo, Brand & Sidebar Toggle */}
           <div className="flex items-center gap-3">
-<<<<<<< HEAD
             {currentProfile && (
               <button
                 onClick={onToggleSidebar}
@@ -86,15 +85,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Menu className="w-5 h-5" />
               </button>
             )}
-=======
-            <button
-              onClick={onToggleSidebar}
-              className="p-2 text-[#1E1E1E] bg-[#F5F1E8] hover:bg-[#E8E3D8] border border-[#E8E3D8] rounded-xl cursor-pointer transition-colors"
-              title="Toggle Navigation Sidebar"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
             <div className="w-10 h-10 rounded-2xl bg-[#F2C879] flex items-center justify-center shadow-xs text-[#1A1A1A] font-bold shrink-0">
               <Github className="w-5 h-5" />
@@ -114,7 +104,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-<<<<<<< HEAD
           {/* Search Bar (Center Header) - Only visible when profile is active */}
           {currentProfile ? (
             <form onSubmit={handleSearchSubmit} className="flex items-center max-w-md relative flex-1 mx-2 sm:mx-6">
@@ -138,27 +127,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <div className="flex-1" />
           )}
-=======
-          {/* Search Bar (Center Header) */}
-          <form onSubmit={handleSearchSubmit} className="flex items-center max-w-md relative flex-1 mx-2 sm:mx-6">
-            <div className="relative w-full">
-              <Search className="w-4 h-4 text-[#8B8680] absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Analyze GitHub user..."
-                className="w-full pl-10 pr-20 py-2 text-xs bg-[#F5F1E8] border border-[#E8E3D8] rounded-xl text-[#1E1E1E] placeholder-[#8B8680] focus:outline-none focus:ring-2 focus:ring-[#F2C879] focus:bg-white transition-all font-medium"
-              />
-              <button
-                type="submit"
-                className="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1 text-[11px] font-bold bg-[#F2C879] hover:bg-[#e2b765] text-[#1A1A1A] rounded-lg transition-all cursor-pointer shadow-xs"
-              >
-                Search
-              </button>
-            </div>
-          </form>
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Sparkles, Zap, ShieldCheck, Clock, FileText, Rocket } from 'lucide-react';
 import { GitHubProfile, LatestActivity, OverallPortfolioScore, Repository } from '../../types';
 import { formatRelativeTime } from '../../utils/dateUtils';
@@ -56,7 +56,6 @@ export const DashboardHero: React.FC<DashboardHeroProps> = ({
 
         {/* Compact Portfolio Summary Widgets */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 border-t border-[#E8E3D8]">
-<<<<<<< HEAD
           {/* Widget 1: Overall GitHub Score */}
           <div className="bg-[#F5F1E8] border border-[#E8E3D8] rounded-2xl p-3.5 flex flex-col justify-between">
             <div className="flex items-center justify-between text-xs text-[#8B8680] font-bold">
@@ -73,19 +72,6 @@ export const DashboardHero: React.FC<DashboardHeroProps> = ({
                   {portfolioScore.performanceLevel}
                 </span>
               )}
-=======
-          {/* Widget 1: Portfolio Health Score */}
-          <div className="bg-[#F5F1E8] border border-[#E8E3D8] rounded-2xl p-3.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-xs text-[#8B8680] font-bold">
-              <span>Portfolio Health Score</span>
-              <ShieldCheck className="w-4 h-4 text-[#22C55E]" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-1.5">
-              <span className="text-2xl font-black text-[#1E1E1E]">{score}</span>
-              <span className="text-xs font-bold text-[#22C55E]">
-                /100 ({grade})
-              </span>
->>>>>>> d24ff4df7c58375cfcccee56ee8584842bba25ed
             </div>
             <div className="w-full h-1.5 bg-white rounded-full overflow-hidden border border-[#E8E3D8] mt-2">
               <div
