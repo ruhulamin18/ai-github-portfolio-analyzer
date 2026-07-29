@@ -122,6 +122,112 @@ export async function fetchGitHubUserDataDirect(
   const totalStars = mappedRepos.reduce((sum, r) => sum + r.stars, 0);
   const totalForks = mappedRepos.reduce((sum, r) => sum + r.forks, 0);
 
+  let userEvents: any[] = [];
+  try {
+    const eventsRes = await fetch(`https://api.github.com/users/${cleanUser}/events/public?per_page=100`, { headers });
+    if (eventsRes.ok) {
+      const data = await eventsRes.json();
+      if (Array.isArray(data)) {
+        userEvents = data;
+      }
+    }
+  } catch {
+    // Ignore events fetch failure
+  }
+
+  // Fetch Real 365-day Contribution Calendar Data
+  let heatmap: ContributionDay[] = [];
+  let totalContributions = 0;
+
+  try {
+    const contribRes = await fetch(`https://github-contributions-api.jogruber.de/v4/${cleanUser}?y=last`);
+    if (contribRes.ok) {
+      const contribData = await contribRes.json();
+      if (contribData && Array.isArray(contribData.contributions) && contribData.contributions.length > 0) {
+        heatmap = contribData.contributions.map((c: any) => ({
+          date: c.date,
+          count: Number(c.count) || 0,
+          level: (Math.min(4, Math.max(0, Number(c.level) || 0))) as 0 | 1 | 2 | 3 | 4,
+        }));
+        totalContributions = contribData.total?.lastYear || heatmap.reduce((sum, d) => sum + d.count, 0);
+      }
+    }
+  } catch {
+    // Fallback if network or CORS fails
+  }
+
+  // Fallback: If 365-day calendar fetch failed, generate from events and commit dates
+  if (heatmap.length === 0) {
+    const commitDatesMap: Record<string, number> = {};
+
+    userEvents.forEach((evt: any) => {
+      if (!evt.created_at) return;
+      const dateStr = evt.created_at.split('T')[0];
+      let addCount = 1;
+      if (evt.type === 'PushEvent') {
+        addCount = evt.payload?.size || evt.payload?.commits?.length || 1;
+      }
+      commitDatesMap[dateStr] = (commitDatesMap[dateStr] || 0) + addCount;
+    });
+
+    // Fetch recent commits for top 5 repos
+    const topRepos = mappedRepos.slice(0, 5);
+    await Promise.allSettled(
+      topRepos.map(async (repo) => {
+        try {
+          const commitsRes = await fetch(
+            `https://api.github.com/repos/${cleanUser}/${repo.name}/commits?per_page=30`,
+            { headers }
+          );
+          if (commitsRes.ok) {
+            const commits = await commitsRes.json();
+            if (Array.isArray(commits)) {
+              commits.forEach((c: any) => {
+                const commitDate = c.commit?.author?.date || c.commit?.committer?.date;
+                if (commitDate) {
+                  const dateStr = commitDate.split('T')[0];
+                  commitDatesMap[dateStr] = (commitDatesMap[dateStr] || 0) + 1;
+                }
+              });
+            }
+          }
+        } catch {
+          // Ignore
+        }
+      })
+    );
+
+    mappedRepos.forEach((r) => {
+      if (r.updatedAt) {
+        const dateStr = r.updatedAt.split('T')[0];
+        if (!commitDatesMap[dateStr]) {
+          commitDatesMap[dateStr] = 1;
+        }
+      }
+    });
+
+    const today = new Date();
+    for (let i = 363; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const count = commitDatesMap[dateStr] || 0;
+      let level: 0 | 1 | 2 | 3 | 4 = 0;
+      if (count > 0) {
+        if (count <= 2) level = 1;
+        else if (count <= 5) level = 2;
+        else if (count <= 10) level = 3;
+        else level = 4;
+      }
+      totalContributions += count;
+      heatmap.push({
+        date: dateStr,
+        count,
+        level,
+      });
+    }
+  }
+
   const profile: GitHubProfile = {
     username: profileData.login || cleanUser,
     name: profileData.name || profileData.login || cleanUser,
@@ -134,7 +240,7 @@ export async function fetchGitHubUserDataDirect(
     publicReposCount: profileData.public_repos || mappedRepos.length,
     starsCount: totalStars,
     forksCount: totalForks,
-    contributionsLastYear: 0,
+    contributionsLastYear: totalContributions,
     createdAt: profileData.created_at || new Date().toISOString(),
   };
 
@@ -155,19 +261,6 @@ export async function fetchGitHubUserDataDirect(
     }))
     .sort((a, b) => b.percentage - a.percentage);
 
-  const today = new Date();
-  const heatmap: ContributionDay[] = [];
-  for (let i = 180; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
-    heatmap.push({
-      date: dateStr,
-      count: 0,
-      level: 0,
-    });
-  }
-
   const metrics = extractGitHubMetrics(profile, mappedRepos);
   const rawScoreResult = calculateOverallGitHubScore(metrics);
   const portfolioScore: OverallPortfolioScore = {
@@ -184,11 +277,23 @@ export async function fetchGitHubUserDataDirect(
     summary: `Overall portfolio score of ${rawScoreResult.overallScore}/100 calculated across ${mappedRepos.length} public repositories.`,
   };
 
-  const latestActivity: LatestActivity | null = mappedRepos.length > 0 ? {
-    repoName: mappedRepos[0].name,
-    commitMessage: `Updated ${mappedRepos[0].name}`,
-    updatedAt: mappedRepos[0].updatedAt,
-  } : null;
+  let latestActivity: LatestActivity | null = null;
+  if (userEvents.length > 0) {
+    const firstEvt = userEvents[0];
+    const repoName = firstEvt.repo?.name?.split('/')[1] || firstEvt.repo?.name || mappedRepos[0]?.name || 'Repository';
+    const commitMsg = firstEvt.payload?.commits?.[0]?.message || (firstEvt.type === 'PushEvent' ? 'Pushed commits to repository' : `Activity: ${firstEvt.type}`);
+    latestActivity = {
+      repoName,
+      commitMessage: commitMsg,
+      updatedAt: firstEvt.created_at || mappedRepos[0]?.updatedAt || new Date().toISOString(),
+    };
+  } else if (mappedRepos.length > 0) {
+    latestActivity = {
+      repoName: mappedRepos[0].name,
+      commitMessage: `Updated ${mappedRepos[0].name}`,
+      updatedAt: mappedRepos[0].updatedAt,
+    };
+  }
 
   return {
     profile,
