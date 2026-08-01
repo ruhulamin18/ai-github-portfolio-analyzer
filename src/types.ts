@@ -123,6 +123,8 @@ export interface SkillGapAnalysis {
   matchPercentage: number;
   userSkills: string[];
   missingSkills: string[];
+  coreSkillsTotal?: number;
+  coreSkillsMatched?: number;
   recommendedTechnologies: string[];
   learningPriorities: {
     skill: string;

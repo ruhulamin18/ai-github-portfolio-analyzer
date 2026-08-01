@@ -143,6 +143,8 @@ export default function App() {
               overallScore={portfolioScore?.totalScore || 0}
               letterGrade={portfolioScore?.letterGrade || '—'}
               isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              profile={profile}
             />
           )}
 
@@ -212,7 +214,14 @@ export default function App() {
                   />
                 )}
 
-                {activeTab === 'roadmap' && <RoadmapView role={selectedRole} />}
+                {activeTab === 'roadmap' && (
+                  <RoadmapView
+                    role={selectedRole}
+                    profile={profile}
+                    repos={repos}
+                    skillGap={skillGap}
+                  />
+                )}
 
                 {activeTab === 'career' && (
                   <CareerGuidanceView career={career} loading={loadingAI} />

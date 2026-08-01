@@ -1,96 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Route,
   CheckCircle2,
   Circle,
   ExternalLink,
   BookOpen,
-  Award,
-  ChevronDown,
-  ChevronUp,
-  Sparkles,
+  User,
+  Target,
 } from 'lucide-react';
-import { RoadmapNode } from '../types';
+import { RoadmapNode, GitHubProfile, Repository, SkillGapAnalysis } from '../types';
+import { generatePersonalizedRoadmapNodes } from '../utils/roadmapGenerator';
 
 interface RoadmapViewProps {
   role?: string;
+  profile?: GitHubProfile | null;
+  repos?: Repository[];
+  skillGap?: SkillGapAnalysis | null;
 }
 
 export const RoadmapView: React.FC<RoadmapViewProps> = ({
-  role = 'Full Stack Engineering',
+  role = 'Full Stack Engineer',
+  profile,
+  repos = [],
+  skillGap,
 }) => {
-  const [nodes, setNodes] = useState<RoadmapNode[]>([
-    {
-      id: 'r1',
-      title: 'Modern React 19 & Architecture',
-      category: 'Frontend Core',
-      level: 'Beginner',
-      completed: true,
-      description: 'Master Server Components, React Hooks, Context API, and state management.',
-      recommendedResource: 'https://react.dev/learn',
-      subtopics: ['Custom Hooks', 'React Server Components', 'Component Modularity', 'Performance Profiling'],
-    },
-    {
-      id: 'r2',
-      title: 'TypeScript 5.8 Deep Dive',
-      category: 'Language Hygiene',
-      level: 'Beginner',
-      completed: true,
-      description: 'Strict type safety, generics, utility types, and module resolution patterns.',
-      recommendedResource: 'https://www.typescriptlang.org/docs/',
-      subtopics: ['Generics & Constraints', 'Mapped Types', 'Conditional Types', 'ESM Path Resolution'],
-    },
-    {
-      id: 'r3',
-      title: 'Node.js & Express REST Microservices',
-      category: 'Backend Core',
-      level: 'Intermediate',
-      completed: true,
-      description: 'Build scalable APIs with JWT auth, rate limiting, and middleware chains.',
-      recommendedResource: 'https://expressjs.com/',
-      subtopics: ['JWT Authentication', 'Rate Limiting', 'Error Handling Middlewares', 'Input Validation'],
-    },
-    {
-      id: 'r4',
-      title: 'PostgreSQL & Drizzle ORM Relational Databases',
-      category: 'Database Architecture',
-      level: 'Intermediate',
-      completed: false,
-      description: 'Design normalized SQL schemas, indexes, foreign keys, and migration scripts.',
-      recommendedResource: 'https://orm.drizzle.team/',
-      subtopics: ['Normalized Schema Design', 'Foreign Key Cascades', 'Indexing Strategies', 'Migrations'],
-    },
-    {
-      id: 'r5',
-      title: 'Docker & Multi-Stage Containerization',
-      category: 'DevOps & Infra',
-      level: 'Intermediate',
-      completed: false,
-      description: 'Containerize backend Node services and React frontend applications.',
-      recommendedResource: 'https://docs.docker.com/',
-      subtopics: ['Dockerfiles', 'Docker Compose', 'Multi-Stage Builds', 'Volume Mounts'],
-    },
-    {
-      id: 'r6',
-      title: 'GitHub Actions CI/CD Workflows',
-      category: 'Automation',
-      level: 'Advanced',
-      completed: false,
-      description: 'Automate testing, linting, Docker image pushes, and Cloud Run deployments.',
-      recommendedResource: 'https://docs.github.com/en/actions',
-      subtopics: ['Workflow Triggers', 'Matrix Builds', 'Secret Injection', 'Automated Testing'],
-    },
-    {
-      id: 'r7',
-      title: 'Kubernetes & Helm Deployment Orchestration',
-      category: 'Cloud Native',
-      level: 'Advanced',
-      completed: false,
-      description: 'Manage production clusters, auto-scaling, ingress proxies, and health probes.',
-      recommendedResource: 'https://kubernetes.io/docs/',
-      subtopics: ['Deployments & Services', 'Ingress Rules', 'Helm Charts', 'Resource Limits'],
-    },
-  ]);
+  const [nodes, setNodes] = useState<RoadmapNode[]>([]);
+
+  useEffect(() => {
+    const generated = generatePersonalizedRoadmapNodes(profile, repos, skillGap, role);
+    setNodes(generated);
+  }, [profile?.username, repos.length, role, skillGap?.matchPercentage]);
 
   const toggleNode = (id: string) => {
     setNodes((prev) =>
@@ -99,7 +38,8 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
   };
 
   const completedCount = nodes.filter((n) => n.completed).length;
-  const progressPercent = Math.round((completedCount / nodes.length) * 100);
+  const progressPercent = nodes.length > 0 ? Math.round((completedCount / nodes.length) * 100) : 0;
+  const username = profile?.username || 'User';
 
   return (
     <div className="space-y-6">
@@ -107,15 +47,21 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
       {/* Header */}
       <div className="bg-white border border-[#E8E3D8] rounded-3xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xs">
         <div>
-          <div className="flex items-center gap-2 text-[#1E1E1E] text-xs font-mono font-bold uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-[#1E1E1E] text-xs font-mono font-bold uppercase tracking-wider flex-wrap">
             <Route className="w-4 h-4 text-[#8B8680]" />
             <span>Interactive Learning Path</span>
+            {profile?.username && (
+              <span className="bg-[#F2C879]/30 text-[#1E1E1E] px-2 py-0.5 rounded-lg border border-[#F2C879] flex items-center gap-1">
+                <User className="w-3 h-3" />
+                <span>@{profile.username}</span>
+              </span>
+            )}
           </div>
-          <h2 className="text-xl font-extrabold text-[#1E1E1E] mt-1">
-            {role} Career Roadmap
+          <h2 className="text-xl font-extrabold text-[#1E1E1E] mt-1.5 flex items-center gap-2">
+            <span>{role} Personalized Roadmap</span>
           </h2>
           <p className="text-xs text-[#8B8680] font-medium mt-1">
-            Personalized step-by-step engineering progression with completion tracking
+            Tailored step-by-step engineering progression calculated from @{username}'s GitHub repository stack & skill gap analysis
           </p>
         </div>
 
@@ -130,7 +76,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
               style={{ width: `${progressPercent}%` }}
             ></div>
           </div>
-          <p className="text-[10px] text-[#8B8680] text-right font-medium">{completedCount} of {nodes.length} skills mastered</p>
+          <p className="text-[10px] text-[#8B8680] text-right font-medium">{completedCount} of {nodes.length} skills verified/mastered</p>
         </div>
       </div>
 

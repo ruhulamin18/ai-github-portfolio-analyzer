@@ -157,10 +157,34 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
           {/* Dynamic Progress Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'Required Skills', value: requiredSkillsCount, total: requiredSkillsCount, icon: Target },
-              { label: 'Strong Skills', value: strongSkills.length, total: requiredSkillsCount, icon: CheckCircle2 },
-              { label: 'Missing Skills', value: missingSkills.length, total: requiredSkillsCount, icon: XCircle },
-              { label: 'Weak Areas', value: weakAreas.length, total: skillDistribution.length, icon: Gauge },
+              {
+                label: 'Core Role Skills',
+                value: skillGap.coreSkillsMatched ?? strongSkills.length,
+                total: skillGap.coreSkillsTotal ?? requiredSkillsCount,
+                icon: Target,
+                color: '#22C55E',
+              },
+              {
+                label: 'Strong Verified Skills',
+                value: strongSkills.length,
+                total: requiredSkillsCount,
+                icon: CheckCircle2,
+                color: '#22C55E',
+              },
+              {
+                label: 'Missing Industry Skills',
+                value: missingSkills.length,
+                total: requiredSkillsCount,
+                icon: XCircle,
+                color: '#D97706',
+              },
+              {
+                label: 'Weak Core Areas',
+                value: weakAreas.length,
+                total: missingSkills.length || 1,
+                icon: Gauge,
+                color: '#EF4444',
+              },
             ].map((card) => {
               const Icon = card.icon;
               const percent = card.total ? Math.round((card.value / card.total) * 100) : 0;
@@ -170,9 +194,15 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
                     <span className="text-xs font-bold text-[#8B8680]">{card.label}</span>
                     <Icon className="w-4 h-4 text-[#1E1E1E]" />
                   </div>
-                  <div className="text-2xl font-black text-[#1E1E1E]">{card.value}<span className="text-xs text-[#8B8680]">/{card.total}</span></div>
+                  <div className="text-2xl font-black text-[#1E1E1E]">
+                    {card.value}
+                    <span className="text-xs text-[#8B8680] font-semibold">/{card.total}</span>
+                  </div>
                   <div className="h-2 bg-[#F5F1E8] rounded-full overflow-hidden border border-[#E8E3D8]">
-                    <div className="h-full bg-[#F2C879] transition-all duration-500" style={{ width: `${percent}%` }} />
+                    <div
+                      className="h-full bg-[#F2C879] transition-all duration-500"
+                      style={{ width: `${percent}%` }}
+                    />
                   </div>
                 </div>
               );
@@ -181,14 +211,20 @@ export const SkillGapView: React.FC<SkillGapViewProps> = ({
 
           {/* Role-Aware Charts */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="bg-white border border-[#E8E3D8] rounded-3xl p-5 space-y-3 shadow-xs">
+            <div className="bg-white border border-[#E8E3D8] rounded-3xl p-5 space-y-3 shadow-xs overflow-hidden">
               <h3 className="text-sm font-extrabold text-[#1E1E1E]">Category Radar</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={radarData}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="category" tick={{ fontSize: 10, fill: '#8B8680' }} />
-                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 9 }} />
+                  <RadarChart
+                    cx="50%"
+                    cy="50%"
+                    outerRadius="55%"
+                    data={radarData}
+                    margin={{ top: 10, right: 24, bottom: 10, left: 24 }}
+                  >
+                    <PolarGrid stroke="#E8E3D8" />
+                    <PolarAngleAxis dataKey="category" tick={{ fontSize: 9, fill: '#4A4A4A', fontWeight: 600 }} />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 8, fill: '#8B8680' }} />
                     <Radar dataKey="score" stroke="#22C55E" fill="#22C55E" fillOpacity={0.28} />
                     <Tooltip />
                   </RadarChart>
